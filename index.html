@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌾 Crop Disease Detection</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Welcome Page -->
+    <div id="welcomePage" class="page-full active">
+        <div class="welcome-container">
+            <div class="welcome-content">
+                <h1>Crop Disease Detection</h1>
+                <p class="welcome-subtitle">Protect Your Harvest with AI-Powered Disease Detection</p>
+                <p class="welcome-description">
+                    Identify crop diseases instantly by uploading a leaf image. Get accurate diagnosis with treatment recommendations to save your crops.
+                </p>
+                
+                <div class="welcome-features">
+                    <div class="feature">
+                        <span class="feature-icon">🤖</span>
+                        <p><strong>AI-Powered</strong><br>Advanced machine learning for accurate detection</p>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">⚡</span>
+                        <p><strong>Instant Results</strong><br>Get disease diagnosis in seconds</p>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">💊</span>
+                        <p><strong>Solutions</strong><br>Treatment recommendations included</p>
+                    </div>
+                </div>
+
+                <div class="welcome-buttons">
+                    <button class="btn-welcome btn-login" onclick="showSection('login')">Login</button>
+                    <button class="btn-welcome btn-register" onclick="showSection('register')">Register</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Page -->
+    <div id="loginPage" class="page-full">
+        <div class="auth-container">
+            <div class="auth-box">
+                <div class="auth-header">
+                    <h1>🌾 Welcome Back</h1>
+                    <p>Login to detect crop diseases</p>
+                </div>
+
+                <form onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label for="loginEmail">Email Address</label>
+                        <input type="email" id="loginEmail" name="email" placeholder="Enter your email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" name="password" placeholder="Enter your password" required>
+                    </div>
+
+                    <button type="submit" class="btn-submit">Login</button>
+                </form>
+
+                <div class="auth-footer">
+                    <p>Don't have an account? <a href="#" onclick="showSection('register')">Register here</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Page -->
+    <div id="registerPage" class="page-full">
+        <div class="auth-container">
+            <div class="auth-box">
+                <div class="auth-header">
+                    <h1>🌾 Join Us</h1>
+                    <p>Create an account to get started</p>
+                </div>
+
+                <form onsubmit="handleRegister(event)">
+                    <div class="form-group">
+                        <label for="registerName">Full Name</label>
+                        <input type="text" id="registerName" name="name" placeholder="Enter your name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerEmail">Email Address</label>
+                        <input type="email" id="registerEmail" name="email" placeholder="Enter your email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerPassword">Password</label>
+                        <input type="password" id="registerPassword" name="password" placeholder="Create a password" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerConfirm">Confirm Password</label>
+                        <input type="password" id="registerConfirm" name="confirm" placeholder="Confirm password" required>
+                    </div>
+
+                    <button type="submit" class="btn-submit">Register</button>
+                </form>
+
+                <div class="auth-footer">
+                    <p>Already have an account? <a href="#" onclick="showSection('login')">Login here</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App Container (After Login) -->
+    <div id="appContainer" class="app-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-left">
+                <h1>🌾 Crop Disease Detection System</h1>
+                <p>Upload a crop leaf image to detect diseases</p>
+            </div>
+            <div class="header-right">
+                <span class="user-info" id="userInfo"></span>
+                <button class="btn-logout" onclick="handleLogout()">Logout</button>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="navbar">
+            <button class="nav-btn active" onclick="showPage('upload')">🏠 Upload</button>
+            <button class="nav-btn" onclick="showPage('history')">📜 History</button>
+            <button class="nav-btn" onclick="showPage('about')">ℹ️ About</button>
+        </nav>
+
+        <!-- Upload Page -->
+        <div id="uploadPage" class="page active">
+            <div class="upload-section">
+                <h2>📸 Upload Leaf Image</h2>
+                
+                <div class="upload-area" onclick="document.getElementById('imageInput').click()">
+                    <div class="upload-icon">📤</div>
+                    <p>Click to upload or drag & drop</p>
+                    <p class="upload-text">JPG, PNG, GIF (Max 10 MB)</p>
+                </div>
+                
+                <input type="file" id="imageInput" accept="image/*" onchange="handleImageSelect(event)">
+                
+                <div id="previewContainer" style="display:none;">
+                    <img id="previewImage" src="" alt="Preview">
+                    <button class="btn-upload" onclick="uploadImage()">
+                        🚀 Predict Disease
+                    </button>
+                    <button class="btn-clear" onclick="clearPreview()">Clear</button>
+                </div>
+
+                <div id="loadingSpinner" class="loading" style="display:none;">
+                    <div class="spinner"></div>
+                    <p>Analyzing image...</p>
+                </div>
+            </div>
+
+            <!-- Result Display -->
+            <div id="resultContainer" style="display:none;" class="result-section">
+                <h2>✅ Prediction Result</h2>
+                <div class="result-card">
+                    <div class="result-row">
+                        <label>🦠 Disease Detected:</label>
+                        <span id="resultDisease" class="result-value"></span>
+                    </div>
+                    <div class="result-row">
+                        <label>📊 Confidence:</label>
+                        <span id="resultConfidence" class="result-value"></span>
+                    </div>
+                    <div class="result-row">
+                        <label>💊 Solution:</label>
+                        <p id="resultSolution" class="result-value solution-text"></p>
+                    </div>
+                </div>
+                <button class="btn-upload" onclick="resetUpload()">Upload Another Image</button>
+            </div>
+
+            <!-- Error Display -->
+            <div id="errorContainer" style="display:none;" class="error-section">
+                <h3>❌ Error</h3>
+                <p id="errorMessage"></p>
+                <button class="btn-upload" onclick="hideError()">Try Again</button>
+            </div>
+        </div>
+
+        <!-- History Page -->
+        <div id="historyPage" class="page">
+            <h2>📜 Prediction History</h2>
+            <button class="btn-refresh" onclick="loadHistory()">🔄 Refresh</button>
+            
+            <div id="historyContainer" class="history-list">
+                <p class="loading-text">Loading predictions...</p>
+            </div>
+        </div>
+
+        <!-- About Page -->
+        <div id="aboutPage" class="page">
+            <h2>ℹ️ About This System</h2>
+            <div class="about-content">
+                <h3>🌾 What is this?</h3>
+                <p>A web-based AI system that detects crop diseases from leaf images. Upload a photo and get instant disease identification with treatment recommendations.</p>
+                
+                <h3>🎯 How it works?</h3>
+                <ol>
+                    <li>Upload a crop leaf image (JPG, PNG, GIF)</li>
+                    <li>AI model analyzes the image</li>
+                    <li>Get disease diagnosis with confidence score</li>
+                    <li>Receive treatment recommendations</li>
+                </ol>
+
+                <h3>🔬 Supported Diseases</h3>
+                <ul>
+                    <li>Early Blight</li>
+                    <li>Late Blight</li>
+                    <li>Septoria Leaf Spot</li>
+                    <li>Powdery Mildew</li>
+                    <li>And more...</li>
+                </ul>
+
+                <h3>📱 Technical Stack</h3>
+                <ul>
+                    <li><strong>Backend:</strong> Spring Boot 4.0 (Java 25)</li>
+                    <li><strong>AI API:</strong> Flask (Python)</li>
+                    <li><strong>Database:</strong> H2 (In-Memory)</li>
+                    <li><strong>Frontend:</strong> HTML5 + CSS3 + Vanilla JavaScript</li>
+                </ul>
+
+                <h3>📊 API Endpoints</h3>
+                <ul>
+                    <li><code>POST /api/predict</code> - Upload image and predict</li>
+                    <li><code>GET /api/history</code> - Get all predictions</li>
+                    <li><code>GET /api/health</code> - Health check</li>
+                    <li><code>GET /api/info</code> - API information</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

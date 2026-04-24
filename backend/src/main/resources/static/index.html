@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌾 Crop Disease Detection System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="auth.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <button class="nav-btn active" onclick="showPage('home')">🏠 Home</button>
+        <button class="nav-btn" onclick="showPage('upload')" id="uploadNavBtn" style="display:none;">📸 Upload</button>
+        <button class="nav-btn" onclick="showPage('history')" id="historyNavBtn" style="display:none;">📜 History</button>
+        <button class="nav-btn" onclick="showPage('profile')" id="profileNavBtn" style="display:none;">👤 Profile</button>
+        <button class="nav-btn" onclick="showPage('login')" id="loginNavBtn">🔐 Login</button>
+        <button class="nav-btn" onclick="showPage('register')" id="registerNavBtn">📝 Register</button>
+        <button class="nav-btn" onclick="logout()" id="logoutNavBtn" style="display:none;">🚪 Logout</button>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- HOME PAGE -->
+        <div id="home" class="page active">
+            <section class="hero">
+                <h1>🌾 Crop Disease Detection System</h1>
+                <p class="subtitle">AI-Powered Agricultural Disease Identification</p>
+                
+                <div class="features">
+                    <div class="feature-card">
+                        <div class="feature-icon">📸</div>
+                        <h3>Upload Images</h3>
+                        <p>Simple image upload for your crop leaves</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">🤖</div>
+                        <h3>AI Analysis</h3>
+                        <p>Advanced AI identifies diseases accurately</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">💊</div>
+                        <h3>Treatment Guide</h3>
+                        <p>Get detailed treatment suggestions</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">📊</div>
+                        <h3>History Tracking</h3>
+                        <p>Keep a history of all predictions</p>
+                    </div>
+                </div>
+
+                <div class="cta-buttons">
+                    <button class="btn btn-primary" onclick="showPage('upload'); return false;">
+                        Start Detection →
+                    </button>
+                </div>
+
+                <div class="info-section">
+                    <h2>How It Works</h2>
+                    <ol class="steps">
+                        <li><strong>Upload Image:</strong> Click to select or drag a crop leaf image</li>
+                        <li><strong>AI Analysis:</strong> Our AI model analyzes the image</li>
+                        <li><strong>Get Results:</strong> Receive disease name, confidence, and treatment</li>
+                        <li><strong>Track History:</strong> View all your predictions in history</li>
+                    </ol>
+                </div>
+            </section>
+        </div>
+
+        <!-- UPLOAD PAGE -->
+        <div id="upload" class="page">
+            <section class="upload-section">
+                <h1>📸 Upload Crop Image</h1>
+                <p class="section-subtitle">Upload a clear image of your crop leaf for disease detection</p>
+
+                <!-- Upload Area -->
+                <div class="upload-container">
+                    <div class="upload-box" id="uploadBox" onclick="document.getElementById('imageInput').click()">
+                        <div class="upload-icon">📤</div>
+                        <h3>Click to Upload or Drag & Drop</h3>
+                        <p>JPG, PNG, GIF, BMP (Max 10 MB)</p>
+                    </div>
+                    
+                    <input type="file" id="imageInput" accept="image/*" style="display: none;">
+                </div>
+
+                <!-- Image Preview -->
+                <div id="previewContainer" class="preview-container" style="display: none;">
+                    <div class="preview-box">
+                        <h3>Image Preview</h3>
+                        <img id="previewImage" src="" alt="Preview">
+                        <p id="fileName"></p>
+                    </div>
+
+                    <div class="button-group">
+                        <button class="btn btn-primary" onclick="uploadImage()">
+                            <span id="uploadBtnText">🚀 Predict Disease</span>
+                        </button>
+                        <button class="btn btn-secondary" onclick="clearImage()">Clear Image</button>
+                    </div>
+                </div>
+
+                <!-- Loading Spinner -->
+                <div id="loadingSpinner" class="loading-spinner" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>Analyzing image with AI...</p>
+                </div>
+
+                <!-- Error Messages -->
+                <div id="errorMessage" class="error-message" style="display: none;"></div>
+            </section>
+        </div>
+
+        <!-- RESULT PAGE -->
+        <div id="result" class="page">
+            <section class="result-section">
+                <h1>🔍 Detection Result</h1>
+                
+                <div id="resultContainer" class="result-container" style="display: none;">
+                    <!-- Disease Card -->
+                    <div class="result-card disease-card">
+                        <h2>Disease Detected</h2>
+                        <div class="disease-name" id="resultDisease">-</div>
+                        <p class="disease-label">Disease Name</p>
+                    </div>
+
+                    <!-- Confidence Card -->
+                    <div class="result-card confidence-card">
+                        <h2>Confidence Level</h2>
+                        <div class="confidence-value" id="resultConfidence">-</div>
+                        <div class="confidence-bar">
+                            <div id="confidenceBarFill" class="confidence-bar-fill"></div>
+                        </div>
+                    </div>
+
+                    <!-- Treatment Card -->
+                    <div class="result-card treatment-card">
+                        <h2>💊 Recommended Treatment</h2>
+                        <p id="resultSolution">-</p>
+                    </div>
+
+                    <!-- Result Image -->
+                    <div class="result-card image-card">
+                        <h2>Uploaded Image</h2>
+                        <img id="resultImage" src="" alt="Analyzed">
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="result-actions">
+                        <button class="btn btn-primary" onclick="showPage('upload')">
+                            📸 Upload Another Image
+                        </button>
+                        <button class="btn btn-secondary" onclick="showPage('history')">
+                            📜 View History
+                        </button>
+                    </div>
+                </div>
+
+                <div id="noResultMessage" class="message-box" style="display: block;">
+                    <p>No prediction results yet. Upload an image to get started!</p>
+                </div>
+            </section>
+        </div>
+
+        <!-- HISTORY PAGE -->
+        <div id="history" class="page">
+            <section class="history-section">
+                <h1>📜 Prediction History</h1>
+                <p class="section-subtitle">All your past crop disease predictions</p>
+
+                <div class="history-controls">
+                    <button class="btn btn-secondary" onclick="loadHistory()">🔄 Refresh</button>
+                    <button class="btn btn-secondary" onclick="clearAllHistory()">🗑️ Clear All</button>
+                </div>
+
+                <!-- History Table -->
+                <div id="historyContainer" class="history-container">
+                    <table class="history-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Date & Time</th>
+                                <th>Disease</th>
+                                <th>Confidence</th>
+                                <th>Treatment Summary</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTableBody">
+                            <tr>
+                                <td colspan="5" class="empty-message">Loading predictions...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="emptyHistoryMessage" class="message-box" style="display: none;">
+                    <p>No predictions yet. Upload an image to get started!</p>
+                </div>
+
+                <div id="historyError" class="error-message" style="display: none;"></div>
+            </section>
+        </div>
+
+        <!-- LOGIN PAGE -->
+        <div id="login" class="page">
+            <section class="auth-section">
+                <div class="auth-container">
+                    <h1>🔐 Login</h1>
+                    <p class="auth-subtitle">Sign in to your account</p>
+                    
+                    <form id="loginForm" onsubmit="return handleLogin(event)">
+                        <div class="form-group">
+                            <label for="loginEmail">📧 Email:</label>
+                            <input type="email" id="loginEmail" name="email" required placeholder="your@email.com">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="loginPassword">🔑 Password:</label>
+                            <input type="password" id="loginPassword" name="password" required placeholder="Enter your password">
+                        </div>
+                        
+                        <div id="loginError" class="error-message" style="display: none;"></div>
+                        
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
+                    </form>
+                    
+                    <p class="auth-link">Don't have an account? 
+                        <a href="#" onclick="showPage('register'); return false;">Register here</a>
+                    </p>
+                </div>
+            </section>
+        </div>
+
+        <!-- REGISTER PAGE -->
+        <div id="register" class="page">
+            <section class="auth-section">
+                <div class="auth-container">
+                    <h1>📝 Create Account</h1>
+                    <p class="auth-subtitle">Join our agricultural community</p>
+                    
+                    <form id="registerForm" onsubmit="return handleRegister(event)">
+                        <div class="form-group">
+                            <label for="registerName">👤 Full Name:</label>
+                            <input type="text" id="registerName" name="name" required placeholder="Your full name">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="registerEmail">📧 Email:</label>
+                            <input type="email" id="registerEmail" name="email" required placeholder="your@email.com">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="registerPassword">🔑 Password:</label>
+                            <input type="password" id="registerPassword" name="password" required placeholder="Create a password">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="registerPhone">📱 Phone:</label>
+                            <input type="tel" id="registerPhone" name="phone" placeholder="Your phone number">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="registerState">🌾 State:</label>
+                            <input type="text" id="registerState" name="state" placeholder="Your state">
+                        </div>
+                        
+                        <div id="registerError" class="error-message" style="display: none;"></div>
+                        
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Create Account</button>
+                    </form>
+                    
+                    <p class="auth-link">Already have an account? 
+                        <a href="#" onclick="showPage('login'); return false;">Login here</a>
+                    </p>
+                </div>
+            </section>
+        </div>
+
+        <!-- PROFILE PAGE -->
+        <div id="profile" class="page">
+            <section class="profile-section">
+                <h1>👤 User Profile</h1>
+                
+                <div class="profile-container">
+                    <div class="profile-card">
+                        <h2>Account Information</h2>
+                        <div class="profile-info">
+                            <p><strong>Name:</strong> <span id="profileName">-</span></p>
+                            <p><strong>Email:</strong> <span id="profileEmail">-</span></p>
+                            <p><strong>Phone:</strong> <span id="profilePhone">-</span></p>
+                            <p><strong>State:</strong> <span id="profileState">-</span></p>
+                            <p><strong>Member Since:</strong> <span id="profileDate">-</span></p>
+                        </div>
+                    </div>
+
+                    <div class="profile-card">
+                        <h2>📊 Statistics</h2>
+                        <div class="stats">
+                            <div class="stat-item">
+                                <div class="stat-value" id="totalPredictions">0</div>
+                                <div class="stat-label">Total Predictions</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="avgConfidence">0%</div>
+                                <div class="stat-label">Avg Confidence</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="profile-actions">
+                        <button class="btn btn-primary" onclick="showPage('upload')">📸 Make Prediction</button>
+                        <button class="btn btn-primary" onclick="showPage('history')">📜 View History</button>
+                        <button class="btn btn-secondary" onclick="logout()">🚪 Logout</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2026 Crop Disease Detection System | Built for Farmers</p>
+        <p class="api-status">Backend: <span id="backendStatus">Checking...</span></p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

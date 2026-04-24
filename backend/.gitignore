@@ -1,0 +1,26 @@
+# Maven Project - Git Ignore Rules
+target/
+.classpath
+.project
+.settings/
+.DS_Store
+*.class
+*.log
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+*.iml
+*.iws
+*.ipr
+.gradle/
+build/
+.m2/
+.env
+.env.local
+.env.*.local
+*.jar
+*.war
+!/.mvn/wrapper/maven-wrapper.jar
+/.mvn/wrapper/maven-wrapper.properties
